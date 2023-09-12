@@ -1,21 +1,18 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
-void refine_with_grabCut(cv::Mat image);
+cv::Mat refine_with_grabCut(cv::Mat image);
+cv::Mat pixelate_image(cv::Mat input, cv::Size resolution);
+cv::Mat reduce_palette(cv::Mat input);
 
-int main(int argc, char **argv) {
+cv::Mat pixelate_image(cv::Mat &image)
+{
 	cv::CascadeClassifier faceCascade;
     std::string faceCascadeFile = "cascade/haarcascade_frontalface_alt.xml";
 
     if (!faceCascade.load(faceCascadeFile)) {
         std::cerr << "Error loading face cascade.\n";
-        return -1;
-    }
-
-    cv::Mat image = cv::imread(argv[1]);
-    if (image.empty()) {
-        std::cerr << "Error loading image.\n";
-        return -1;
+	    throw(std::exception());
     }
 
     cv::Mat grayImage;
@@ -34,28 +31,34 @@ int main(int argc, char **argv) {
 
 	cv::Mat just_face_image(image, faces[0]);
 
-	refine_with_grabCut(just_face_image);
+	cv::Mat grabCutted = refine_with_grabCut(just_face_image);
 
-//	cv::rectangle(image, faces[0], cv::Scalar(0, 255, 0), 2);
-
-//	cv::Rect r_left(0, 0, faces[0].width / 10, faces[0].height);
-//	cv::Rect r_right(0 + faces[0].width - faces[0].width / 10, 0, faces[0].width / 10, faces[0].height);
-//	cv::Rect r_center(0 + faces[0].width / 2 - faces[0].width / 10, 0 + faces[0].height / 2 - faces[0].height / 10, faces[0].width / 5, faces[0].height / 5);
-//
-//	cv::rectangle(just_face_image, r_left, cv::Scalar(0, 0, 255), 3);
-//	cv::rectangle(just_face_image, r_right, cv::Scalar(0, 0, 255), 3);
-//	cv::rectangle(just_face_image, r_center, cv::Scalar(255, 0, 0), 3);
-
-//	cv::imshow("Detected Faces", just_face_image);
-//	cv::waitKey(0);
+	cv::Mat pixelated = pixelate_image(grabCutted, cv::Size(32, 32));	
+	return (pixelated);
 }
 
-//NEEDS TO DEFINE A NEW IMAGE FOR GRABCUTTING
-void refine_with_grabCut(cv::Mat image)
+cv::Mat pixelate_image(std::string path) {
+
+    cv::Mat image = cv::imread(path);
+    if (image.empty()) {
+        std::cerr << "Error loading image.\n";
+	    throw(std::exception());
+    }
+	return (pixelate_image(image));
+}
+
+cv::Mat pixelate_image(cv::Mat input, cv::Size resolution)
 {
-    // Define the rectangle containing the person (you can use face detection for this step)
-    // Create a mask of the same size as the image and initialize it with zeros
-	
+	cv::Mat pixelated_small(resolution, CV_8UC4, cv::INTER_LINEAR);
+	cv::resize(input, pixelated_small, resolution);	
+	pixelated_small = reduce_palette(pixelated_small);
+	cv::Mat pixelated_restored(input.size(), CV_8UC4);
+	cv::resize(pixelated_small, pixelated_restored, cv::Size(600, 600), 0, 0, cv::INTER_NEAREST);	
+	return (pixelated_restored);
+}
+
+cv::Mat refine_with_grabCut(cv::Mat image)
+{
 	const double all_factor  = 0.1;
 	const double remove_factor = 0.2;
 	
@@ -67,11 +70,6 @@ void refine_with_grabCut(cv::Mat image)
 
 	cv::Mat fg_result;
 
-    // Set the region of interest (ROI) in the mask to "probably foreground"
- //   mask(r_left).setTo(cv::GC_BGD);
-  //  mask(r_right).setTo(cv::GC_BGD);
-
-    // Perform GrabCut algorithm to segment the foreground from the background
    cv::grabCut(image, mask, all, cv::Mat(), fg_result, 3, cv::GC_INIT_WITH_RECT);
     mask(r_center).setTo(cv::GC_FGD);
     mask(r_left).setTo(cv::GC_BGD);
@@ -88,9 +86,37 @@ void refine_with_grabCut(cv::Mat image)
     image.copyTo(foregroundImage, foregroundMask);
 
     // Display the output
-	cv::rectangle(foregroundImage, r_center, cv::Scalar(255, 0, 0));
-	cv::rectangle(foregroundImage, r_left, cv::Scalar(0, 0, 255));
-	cv::rectangle(foregroundImage, r_right, cv::Scalar(0, 0, 255));
-    cv::imshow("Person in Foreground", foregroundImage);
-    cv::waitKey(0);
+//	cv::rectangle(foregroundImage, r_center, cv::Scalar(255, 0, 0));
+//	cv::rectangle(foregroundImage, r_left, cv::Scalar(0, 0, 255));
+//	cv::rectangle(foregroundImage, r_right, cv::Scalar(0, 0, 255));
+//    cv::imshow("Person in Foreground", foregroundImage);
+//    cv::waitKey(0);
+
+	return (foregroundImage);
+}
+
+cv::Mat	reduce_palette(cv::Mat full_palette)
+{
+	int paletteSize = 8;
+
+	cv::Mat	img;
+	
+	cv::cvtColor(full_palette, img, cv::COLOR_BGR2Lab);
+	cv::Mat colVec = img.reshape(1, img.rows*img.cols);
+	cv::Mat colVecD;
+	colVec.convertTo(colVecD, CV_32FC3, 1.0);
+
+	cv::Mat	labels, centers;
+	cv::kmeans(colVecD, paletteSize, labels, cv::TermCriteria(cv::TermCriteria::MAX_ITER, 100, 0.1), 3, cv::KMEANS_PP_CENTERS, centers);
+	cv::Mat imgPosterized = img.clone();
+	for (int i = 0; i < img.rows; i++)
+		for (int j = 0; j < img.cols; j++)
+			for (int k = 0; k < 3; k++)
+				imgPosterized.at<cv::Vec3b>(i,j)[k] = centers.at<float>(labels.at<int>(j+img.cols*i),k);
+
+	cv::Mat imgPosterizedBGR;
+
+	cv::cvtColor(imgPosterized, imgPosterizedBGR, cv::COLOR_Lab2BGR);
+
+	return (imgPosterizedBGR);
 }

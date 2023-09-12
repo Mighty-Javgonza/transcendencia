@@ -13,12 +13,10 @@ export const getOAuthKey = async(req:any, res:any) => {
 			code:req.query.code,
 			redirect_uri: 'http://localhost:4242/welcome_page',
 		})).then((res) => {
-			console.log(res.data.access_token);
 			return res.data.access_token;
 		}
 		).catch((error) => {
 			console.log(error.message);
 		});	
-		console.log("THE acces TOKEN  " + accessToken);
 		return (accessToken);
 }
