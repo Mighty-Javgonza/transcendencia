@@ -1,11 +1,20 @@
 import express from "express";
-import { getOAuthKey } from './getOAuthKey';
+import { getOAuthKey, getPersonalInfo } from './getOAuthKey';
+import * as fs from "fs";
+//import { sendImageForPixelation } from './sendImageForPixelation';
+import { makeQuery, registerUser, awaitAvatarImage} from './database';
 
 const app = express();
 const port = 4242;
 
 app.use('/', express.static('assets/first_page'));
-app.use('/avatar_images', express.static('assets/avatar_images'));
+app.use('/avatar_images', (req, res, next) => {
+	const imagePath = __dirname + '/assets/avatar_images' + req.path;
+//	if (fs.existsSync(imagePath))
+//		res.sendFile(imagePath);
+//	else
+		awaitAvatarImage(req, res, imagePath);
+});
 
 app.get('/welcome_page', (req, res, next) => {
 	if (req.query.code != undefined)
@@ -13,6 +22,7 @@ app.get('/welcome_page', (req, res, next) => {
 		getOAuthKey(req, res).then((accessToken) => {
 			if (accessToken != undefined)
 			{
+				registerUser(accessToken);
 				res.cookie('42APIToken', accessToken);
 				console.log('token: ' + accessToken);
 			}
