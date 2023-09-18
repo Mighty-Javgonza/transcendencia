@@ -10,10 +10,14 @@ async function modifyPageWithLogin(login) {
 	document.getElementById('login_name').innerHTML = login;
 	avatar = document.getElementById("avatar_image");
 	avatar_url = "../avatar_images/" + login + ".jpg";
-	var fetched = await fetch(avatar_url, {method: "GET"});
-	const image = await fetched.blob();
-	var image_url = URL.createObjectURL(image);
-	avatar.src = image_url;
+	try {
+		var fetched = await fetch(avatar_url, {method: "GET"});
+		const image = await fetched.blob();
+		var image_url = URL.createObjectURL(image);
+		avatar.src = image_url;
+	} catch (err) {
+		console.log('Could not retrieve avatar image');
+	}
 }
 
 window.addEventListener('DOMContentLoaded', function() {
