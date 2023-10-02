@@ -12,6 +12,11 @@ async function modifyPageWithLogin(login) {
 	avatar_url = "../avatar_images/" + login + ".jpg";
 	try {
 		var fetched = await fetch(avatar_url, {method: "GET"});
+		while (fetched.status == 404)
+		{
+			await new Promise(r => setTimeout(r, 1000));
+			fetched = await fetch(avatar_url, {method: "GET"});
+		}
 		const image = await fetched.blob();
 		var image_url = URL.createObjectURL(image);
 		avatar.src = image_url;

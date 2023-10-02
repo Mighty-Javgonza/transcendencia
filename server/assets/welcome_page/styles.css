@@ -27,4 +27,10 @@
 
 #avatar_image {
 	width: 128px;
+	image-rendering: pixelated;
+}
+
+#qr_code {
+	width: 256px;
+	image-rendering: pixelated;
 }

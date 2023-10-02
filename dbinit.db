@@ -1,0 +1,3 @@
+CREATE DATABASE userdatabase;
+\c userdatabase;
+CREATE TABLE apiKeys(id serial PRIMARY KEY, login VARCHAR(256), api_token VARCHAR(128), register_state VARCHAR(32), token_expiration TIMESTAMP, twofa_enabled BIT, twofa_secret VARCHAR(128));

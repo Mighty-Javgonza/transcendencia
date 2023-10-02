@@ -17,14 +17,14 @@
 
 		function redirectToOauth() {
 			const token42 = getCookieToken();
-			if (token42 == undefined)
-			{
-        		const authorizationUrl = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-b16e1d817c759a4768523eda7110974f45570d769c4180e352137a7aeb4a5ee7&redirect_uri=http%3A%2F%2Flocalhost%3A4242%2Fwelcome_page&response_type=code";
+		//	if (token42 == undefined)
+		//	{
+        		const authorizationUrl = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-b16e1d817c759a4768523eda7110974f45570d769c4180e352137a7aeb4a5ee7&redirect_uri=http%3A%2F%2Flocalhost%3A4242%2Finter_log_page&response_type=code";
         		window.location.href = authorizationUrl;
-        	} else {
-        		const alreadyHaveTokenUrl = "http://localhost:4242/welcome_page?token42=" + token42;
-        		window.location.href = alreadyHaveTokenUrl;
-        	}
+        //	} else {
+      //  		const alreadyHaveTokenUrl = "http://localhost:4242/welcome_page?token42=" + token42;
+    //    		window.location.href = alreadyHaveTokenUrl;
+  //      	}
 		}
     </script>
 </body>
