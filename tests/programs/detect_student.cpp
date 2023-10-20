@@ -33,7 +33,7 @@ cv::Mat pixelate_image(cv::Mat &image)
 
 	cv::Mat grabCutted = refine_with_grabCut(just_face_image);
 
-	cv::Mat pixelated = pixelate_image(grabCutted, cv::Size(32, 32));	
+	cv::Mat pixelated = pixelate_image(grabCutted, cv::Size(32, 32));
 	return (pixelated);
 }
 
@@ -49,12 +49,12 @@ cv::Mat pixelate_image(std::string path) {
 
 cv::Mat pixelate_image(cv::Mat input, cv::Size resolution)
 {
-	cv::Mat pixelated_small(resolution, CV_8UC4, cv::INTER_LINEAR);
+	cv::Mat pixelated_small(resolution, CV_8UC4, cv::INTER_NEAREST);
 	cv::resize(input, pixelated_small, resolution);	
 	pixelated_small = reduce_palette(pixelated_small);
 	cv::Mat pixelated_restored(input.size(), CV_8UC4);
 	cv::resize(pixelated_small, pixelated_restored, cv::Size(600, 600), 0, 0, cv::INTER_NEAREST);	
-	return (pixelated_restored);
+	return (pixelated_small);
 }
 
 cv::Mat refine_with_grabCut(cv::Mat image)
@@ -97,7 +97,7 @@ cv::Mat refine_with_grabCut(cv::Mat image)
 
 cv::Mat	reduce_palette(cv::Mat full_palette)
 {
-	int paletteSize = 8;
+	int paletteSize = 6;
 
 	cv::Mat	img;
 	

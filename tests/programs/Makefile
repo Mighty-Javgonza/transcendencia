@@ -3,3 +3,6 @@ all:
 
 asio:
 	g++ asio.cpp detect_student.cpp $(shell pkg-config --cflags --libs opencv4 --static) -I ../boost_1_83_0 -L../boost_1_83_0/libs  -lpthread -o asio.out --std=c++11
+
+see_test:
+	g++ see_test.cpp detect_student.cpp $(shell pkg-config --cflags --libs opencv4 --static) -I ../boost_1_83_0 -L../boost_1_83_0/libs  -lpthread -o see_test.out --std=c++11
