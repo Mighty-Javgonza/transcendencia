@@ -1,0 +1,66 @@
+<template>
+	<div class="overlay">
+		<div class="popup_background">
+			<h3>Sending a  message to <b>{{ this.target }}</b></h3>
+			<div class="text_wrapper">
+				<textarea class="text_input" ></textarea>
+			</div>
+			<button class="send_message" @click="this.$emit('close')">Send</button>
+		</div>
+	</div>
+</template>
+
+<script>
+export default {
+	props: ['target'],
+}
+
+</script>
+
+<style>
+.overlay {
+	width: 100vw;
+	height: 100vh;
+	position:absolute;
+	background-color: #bbbbbbdd;
+	top: 0;
+}
+
+.popup_background {
+	width: 45vw;
+	height: 15vh;
+	min-width: 300px;
+	min-height: 200px;
+	background-color: #497ae5;
+	margin: 25%;
+	border-style: solid;
+	border-color: #efcd23; 
+	border-radius: 10px;
+}
+
+.text_input {
+	max-width: 40vw;
+	max-height: 5vw;
+}
+
+.send_message {
+	margin: 2%;
+	border-style: solid;
+	border-color: #efcd23; 
+	border-radius: 3px;
+	width: 40%;
+	height: 20%;
+	font-size: 15px;
+	font-family: monospace;
+	cursor: pointer;
+}
+
+.text_wrapper {
+	width: 100%;
+}
+
+.h3 {
+	font-family: monospace;
+}
+
+</style>

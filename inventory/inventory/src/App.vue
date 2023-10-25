@@ -1,17 +1,14 @@
 <template>
-<!--  <img alt="Vue logo" src="./assets/logo.png"> -->
- <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-  <InventoryGrid/>
+<InventoryPopupable/>
 </template>
 
 <script>
-//import HelloWorld from './components/HelloWorld.vue'
-import InventoryGrid from './components/InventoryGrid.vue'
+import InventoryPopupable from './components/InventoryPopupable.vue'
 
 export default {
   name: 'App',
   components: {
-      InventoryGrid
+		InventoryPopupable
   }
 }
 </script>
