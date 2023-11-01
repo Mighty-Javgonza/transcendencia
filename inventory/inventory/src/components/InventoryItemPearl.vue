@@ -34,10 +34,10 @@ export default {
 		},
 		act (action) {
 			if (action == "send_message") {
-				this.$emit('enable_message_popup', this.pearl.target_user);
+				this.$emit('enable_message_popup', this.pearl.target, this.pearl.sender);
 				this.close_drop();
 			} else if (action == "view_messages") {
-				this.$emit('enable_view_messages_popup', this.pearl.target_user)
+				this.$emit('enable_view_messages_popup', this.pearl.target, this.pearl.sender)
 				this.item.glow = false;
 				this.close_drop();
 			} else if (action == "close_drop") {

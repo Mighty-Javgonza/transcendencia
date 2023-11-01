@@ -6,6 +6,7 @@
 		{"text": "View messages", "action": "view_messages"},
 		{"text": "Close", "action": "close_drop"}
 	],
-	"target_user": "npinto-g",
+	"target": "npinto-g",
+	"sender": "javgonza",
 	"glow": true
 }

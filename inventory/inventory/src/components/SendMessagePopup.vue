@@ -1,18 +1,37 @@
 <template>
 	<div class="overlay">
-		<div class="popup_background">
+		<div class="send_popup_background">
 			<h3>Sending a  message to <b>{{ this.target }}</b></h3>
 			<div class="text_wrapper">
-				<textarea class="text_input" ></textarea>
+				<textarea class="text_input" v-model="message_text_component"></textarea>
 			</div>
-			<button class="send_message" @click="this.$emit('close')">Send</button>
+			<button class="send_message" @click="send_message()">Send</button>
 		</div>
 	</div>
 </template>
 
 <script>
 export default {
-	props: ['target'],
+	props: ['target', 'sender'],
+	data: () => ({
+		message_text_component: ""
+	}),
+	methods:{
+		send_message() {
+			console.log("TARGET -> " + this.target);
+			console.log("TEXT -> " + this.message_text_component);
+			try {
+				fetch ("http://localhost:4242/send_message?" + new URLSearchParams({
+					sender: this.sender,
+					target: this.target,
+					text: this.message_text_component
+				}));
+			} catch (e) {
+				console.log(e);
+			}
+			this.$emit('close');
+		}
+	}
 }
 
 </script>
@@ -26,7 +45,7 @@ export default {
 	top: 0;
 }
 
-.popup_background {
+.send_popup_background {
 	width: 45vw;
 	height: 15vh;
 	min-width: 300px;

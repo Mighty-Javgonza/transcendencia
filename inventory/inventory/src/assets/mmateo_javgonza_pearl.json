@@ -6,7 +6,7 @@
 		{"text": "View messages", "action": "view_messages"},
 		{"text": "Close", "action": "close_drop"}
 	],
-	"target": "pdiaz-pa",
-	"sender": "javgonza",
+	"sender": "mmateo-t",
+	"target": "javgonza",
 	"glow": false
 }
