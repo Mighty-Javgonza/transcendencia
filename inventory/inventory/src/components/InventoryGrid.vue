@@ -5,7 +5,7 @@
 	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="npearl"/>
 	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="mpearl"/>
 	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="ppearl"/>
-	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="gjpearl"/>
+	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="gpearl"/>
 	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="fjpearl"/>
 	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="njpearl"/>
 	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="mjpearl"/>

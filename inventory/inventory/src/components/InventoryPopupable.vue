@@ -40,15 +40,13 @@ export default {
 				fetch ("http://localhost:4242/receive_messages?"+ new URLSearchParams({
 						recipient:me
 				})).then((result) => {
-					console.log("Retrieving messages");
 					result.text().then((t) => {
-						console.log("HOLAA");
 						const json = JSON.parse(t);
 						let messages_array = [];
 						for (let row in json) {
-							console.log(json[row].row);
-							messages_array.push(json[row][2]);
+							messages_array.push(json[row].message);
 						}
+						this.view_messages = messages_array;
 					});
 				});
 			} catch (e) {
@@ -57,6 +55,7 @@ export default {
 		},
 		disable_view_messages_popup() {
 			this.view_messages_popup = false;
+			this.view_messages = [];
 		}
 	}
 }

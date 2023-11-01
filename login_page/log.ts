@@ -8,6 +8,8 @@ import { welcomePageWithNothing } from './welcome_page_with_nothing'
 import { inter_log_page_code } from "./inter_log_page_code"
 import { enable2_fa } from './enable_2fa'
 import { authenticateJWT } from './authenticate_jwt'
+import { sendMessage } from './send_message'
+import { receiveMessages } from './receive_messages'
 
 const app = express();
 const port = 4242;
@@ -37,6 +39,9 @@ app.use('/welcome_page', express.static('assets/welcome_page'));
 
 app.use('/enable_2fa', authenticateJWT);
 app.get('/enable_2fa', (req, res) => {enable2_fa(req, res)});
+
+app.get('/send_message', (req,res) => {sendMessage(req, res)});
+app.get('/receive_messages', (req,res) => {receiveMessages(req, res)});
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
