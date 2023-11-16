@@ -1,27 +1,31 @@
 <template>
-<InventoryGrid @enable_message_popup="activate_message_popup" @enable_view_messages_popup="activate_view_messages_popup"/>
+<InventoryGrid  @change_active_description="change_active_description"/>
 <SendMessagePopup :target="message_login" :sender="message_sender" v-if="message_popup" @close="disable_message_popup"/>
 <ViewMessagesPopup :target="message_login" :messages="view_messages" v-if="view_messages_popup" @close="disable_view_messages_popup"/>
+<InformationPopup class="info_popup" :info_text="this.active_description"/>
 </template>
 
 <script>
 import InventoryGrid from './InventoryGrid.vue'
 import SendMessagePopup from './SendMessagePopup.vue'
 import ViewMessagesPopup from './ViewMessagesPopup.vue'
+import InformationPopup from './InformationPopup.vue'
 
 export default {
   name: 'InventoryPopupable',
   components: {
 	ViewMessagesPopup,
 	InventoryGrid,
-	SendMessagePopup
+	SendMessagePopup,
+	InformationPopup
   },
   data () {
 	return {
 		message_popup: false,
 		view_messages_popup: false,
 		message_login: "crisfern",
-		view_messages: []
+		view_messages: [],
+		active_description: ""
 	}
   },
   methods: {
@@ -33,7 +37,7 @@ export default {
 		disable_message_popup() {
 			this.message_popup = false;
 		},
-		activate_view_messages_popup(sender, me) {
+/*		activate_view_messages_popup(sender, me) {
 			this.message_login = sender;
 			this.view_messages_popup = true;
 			try {
@@ -53,13 +57,15 @@ export default {
 				console.log(e)
 			}
 		},
-		disable_view_messages_popup() {
-			this.view_messages_popup = false;
-			this.view_messages = [];
+*/		change_active_description(new_description) {
+			this.active_description = new_description;
 		}
 	}
 }
 </script>
 
 <style>
+.info_popup {
+	margin: 10% 0 0%0;
+}
 </style>

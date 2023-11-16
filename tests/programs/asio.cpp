@@ -6,10 +6,11 @@
 using namespace boost::asio;
 
 cv::Mat pixelate_image(cv::Mat &mat);
+cv::Mat pixelate_image(cv::Mat mat, cv::Size resolution);
 
 int main() {
     io_service ioService;
-    ip::tcp::acceptor acceptor(ioService, ip::tcp::endpoint(ip::tcp::v4(), 8080));
+    ip::tcp::acceptor acceptor(ioService, ip::tcp::endpoint(ip::tcp::v4(), 6000));
     
     while (true) {
         ip::tcp::socket socket(ioService);
@@ -45,7 +46,7 @@ std::cout << "IMAGE pixelated" << std::endl;
 
 
 		std::vector<uchar>encoded;
-		cv::imencode(".jpg", abstract_pixel, encoded);
+		cv::imencode(".png", abstract_pixel, encoded);
 
 		char buf[encoded.size()];
 

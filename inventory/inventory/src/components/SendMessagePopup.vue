@@ -29,7 +29,7 @@ export default {
 			} catch (e) {
 				console.log(e);
 			}
-			this.$emit('close');
+			this.$emit('close_interaction');
 		}
 	}
 }
@@ -43,6 +43,7 @@ export default {
 	position:absolute;
 	background-color: #bbbbbbdd;
 	top: 0;
+	left:0;
 }
 
 .send_popup_background {

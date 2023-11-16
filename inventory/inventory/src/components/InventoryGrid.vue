@@ -1,16 +1,17 @@
 <template>
 
 <div class="ItemDistributor">
-	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="fpearl"/>
-	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="npearl"/>
-	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="mpearl"/>
-	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="ppearl"/>
-	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="gpearl"/>
-	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="fjpearl"/>
-	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="njpearl"/>
-	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="mjpearl"/>
-	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="pjpearl"/>
-	<InventoryItemPearl @enable_message_popup="(login, sender) => relay_message_popup_event(login, sender)" @enable_view_messages_popup="(login, sender) => relay_view_messages_popup_event(login, sender)" :pearl="gjpearl"/>
+	<InventoryItem :item_data="fpearl"/>
+	<InventoryItem :item_data="npearl"/>
+	<InventoryItem :item_data="mpearl"/>
+	<InventoryItem :item_data="ppearl"/>
+	<InventoryItem :item_data="gpearl"/>
+	<InventoryItem :item_data="fjpearl"/>
+	<InventoryItem :item_data="njpearl"/>
+	<InventoryItem :item_data="mjpearl"/>
+	<InventoryItem :item_data="pjpearl"/>
+	<InventoryItem :item_data="gjpearl"/>
+	<InventoryItem :item_data="rosary"/>
 
 </div>
 
@@ -18,43 +19,33 @@
 
 
 <script>
-import InventoryItemPearl from './InventoryItemPearl.vue'
-import fpearl from '../assets/fgata_pearl.json'
-import npearl from '../assets/npinto_pearl.json'
-import mpearl from '../assets/mmateo_pearl.json'
-import ppearl from '../assets/pdiaz_pearl.json'
-import gpearl from '../assets/guilmira_pearl.json'
-import fjpearl from '../assets/fgata_javgonza_pearl.json'
-import njpearl from '../assets/npinto_javgonza_pearl.json'
-import mjpearl from '../assets/mmateo_javgonza_pearl.json'
-import pjpearl from '../assets/pdiaz_javgonza_pearl.json'
-import gjpearl from '../assets/guilmira_javgonza_pearl.json'
+import InventoryItem from './InventoryItem.vue'
+import generate_pearl from '../generate_pearl.js'
+import generate_rosary from '../generate_rosary.js'
 
 export default {
 	name: "InventoryGrid",
 	components: {
-		InventoryItemPearl
+		InventoryItem
 	},
 	data () {
 		return ({
-			"fpearl": fpearl,
-			"npearl": npearl,
-			"mpearl": mpearl,
-			"ppearl": ppearl,
-			"gpearl": gpearl,
-			"fjpearl": fjpearl,
-			"njpearl": njpearl,
-			"mjpearl": mjpearl,
-			"pjpearl": pjpearl,
-			"gjpearl": gjpearl
+			"fpearl": generate_pearl("javgonza", "fata-va"),
+			"npearl": generate_pearl("javgonza", "npinto-g"),
+			"mpearl": generate_pearl("javgonza", "mmateo-t"),
+			"ppearl": generate_pearl("javgonza", "pdiaz-pa"),
+			"gpearl": generate_pearl("javgonza", "guilmira"),
+			"fjpearl": generate_pearl("fata-va", "javgonza"),
+			"njpearl": generate_pearl("npinto-g", "javgonza"),
+			"mjpearl": generate_pearl("mmateo-t", "javgonza"),
+			"pjpearl": generate_pearl("pdiaz-pa", "javgonza"),
+			"gjpearl": generate_pearl("guilmira", "javgonza"),
+			"rosary": generate_rosary(["guilmira", "fgata-va", "npinto-g", "javgonza"], "javgonza", "javgonza", ["fgata-va"]),
 		});
 	},
 	methods: {
-		relay_message_popup_event (login, sender) {
-			this.$emit('enable_message_popup', login, sender);
-		},
-		relay_view_messages_popup_event (login, sender) {
-			this.$emit('enable_view_messages_popup', login, sender);
+		relay_description_change (new_description) {
+			this.$emit('change_active_description', new_description);
 		}
 	}
 }
