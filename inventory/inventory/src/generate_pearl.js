@@ -2,7 +2,7 @@ export default function generate_pearl(sender, target) {
 	return (
 	{
 		"item_type": "pearl",
-		"image": "pearl.png",
+		"image": "perla.png",
 		"options": [
 			{"text": "Send message", "action": "send_message"},
 			{"text": "View messages", "action": "view_messages"},

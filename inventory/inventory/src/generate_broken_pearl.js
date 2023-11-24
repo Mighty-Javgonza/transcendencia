@@ -1,7 +1,7 @@
 export default function generate_broken_pearl(sender, target) {
 	return ({
 		"item_type": "broken_pearl",
-		"image": "broken_pearl.png",
+		"image": "perla_rota.png",
 		"options": [
 			{"text": "Reunite", "action": "unban"},
 			{"text": "Close", "action": "close_drop"}

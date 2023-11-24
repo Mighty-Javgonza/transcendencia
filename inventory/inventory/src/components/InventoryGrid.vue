@@ -1,17 +1,17 @@
 <template>
 
 <div class="ItemDistributor">
-	<InventoryItem :item_data="fpearl"/>
-	<InventoryItem :item_data="npearl"/>
-	<InventoryItem :item_data="mpearl"/>
-	<InventoryItem :item_data="ppearl"/>
-	<InventoryItem :item_data="gpearl"/>
-	<InventoryItem :item_data="fjpearl"/>
-	<InventoryItem :item_data="njpearl"/>
-	<InventoryItem :item_data="mjpearl"/>
-	<InventoryItem :item_data="pjpearl"/>
-	<InventoryItem :item_data="gjpearl"/>
-	<InventoryItem :item_data="rosary"/>
+	<InventoryItem @change_active_description="relay_description_change" :item_data="fpearl"/>
+	<InventoryItem @change_active_description="relay_description_change" :item_data="npearl"/>
+	<InventoryItem @change_active_description="relay_description_change" :item_data="mpearl"/>
+	<InventoryItem @change_active_description="relay_description_change" :item_data="ppearl"/>
+	<InventoryItem @change_active_description="relay_description_change" :item_data="gpearl"/>
+	<InventoryItem @change_active_description="relay_description_change" :item_data="fjpearl"/>
+	<InventoryItem @change_active_description="relay_description_change" :item_data="njpearl"/>
+	<InventoryItem @change_active_description="relay_description_change" :item_data="mjpearl"/>
+	<InventoryItem @change_active_description="relay_description_change" :item_data="pjpearl"/>
+	<InventoryItem @change_active_description="relay_description_change" :item_data="gjpearl"/>
+	<InventoryItem @change_active_description="relay_description_change" :item_data="rosary"/>
 
 </div>
 
@@ -56,7 +56,7 @@ export default {
 .ItemDistributor {
 	margin: 0 5vw;
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(117px, 117px));
+	grid-template-columns: repeat(auto-fill, minmax(140px, 140px));
 }
 </style>
 

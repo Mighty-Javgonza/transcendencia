@@ -2,7 +2,7 @@ export default function generate_rosary(targets, sender, owner, admins) {
 	return (
 	{
 		"item_type": "rosary",
-		"image": "rosario.png",
+		"image": "collar.png",
 		"owner_options": [
 			{ "text": "Elevate low member", "action": "make_admin"},
 			{ "text": "Lessen high member", "action": "unmake_admin"},
@@ -24,7 +24,7 @@ export default function generate_rosary(targets, sender, owner, admins) {
 		"owner": owner,
 		"admins": admins,
 		"glow": false,
-		"description": "A close remainder of the most important thing in life. It has a faint glow. You are able to distinguish a vaguely human form inside of it. Someone important to you. If you listen attentively a voice seems to be coming out of it."
+		"description": "Is it better to conect with the indvidual, or with the group? What makes for better phylosophical debate? You seem to have found your own answer..."
 	}
 	);
 }

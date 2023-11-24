@@ -46,7 +46,7 @@ export default {
 					this.$emit('unmake_admin', member)
 			} else if (this.interaction == 'kicking_member') {
 				console.log("HOLAA " + member);
-				if (this.member != this.item.sender)
+				if (member != this.item.sender)
 				{
 					if (this.check_is_admin(member))
 					{

@@ -1,17 +1,20 @@
 <template>
-<InventoryPopupable/>
+<!--<InventoryPopupable/>-->
 <!--<ViewMessagesPopup :messages="['Un buen día,', 'mi buen amigo, fgata-va', 'me invitó a un baile.', '...', '', 'Imagínense mi felicidad.', '', 'Qué buena es la vida.']"/>-->
+<ButtonedInventory/>
 
 </template>
 
 <script>
-import InventoryPopupable from './components/InventoryPopupable.vue'
+//import InventoryPopupable from './components/InventoryPopupable.vue'
 //import ViewMessagesPopup from './components/ViewMessagesPopup.vue'
+import ButtonedInventory from './components/ButtonedInventory.vue'
 
 export default {
   name: 'App',
   components: {
-		InventoryPopupable,
+//		InventoryPopupable,
+		ButtonedInventory,
 //		ViewMessagesPopup
   }
 }
@@ -19,12 +22,7 @@ export default {
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 
 @font-face {

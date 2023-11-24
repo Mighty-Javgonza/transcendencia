@@ -16,15 +16,19 @@ export default {
 </script>
 
 <style>
+body {
+  background-color: #39291985;
+}
 .information_background {
 	height:30vh;
-	background-color: #497ae5;
+	background-color: #392919;
 	max-width: 1000px;
 	min-width: 300px;
 	margin: auto;
-	border-radius: 1em;
+	border-radius: 0.2em;
 	border-style: solid;
-	border-color: #f7e06c;
+	border-color: #603f22;
+    border-width: 1em;
 }
 
 .information_wrapper {

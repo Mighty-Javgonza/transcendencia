@@ -1,6 +1,7 @@
 <template>
 <div class="item_drop_wrapper">
 	<div class="item-border">
+        <img class="fondo_objeto" :src="require('@/assets/fondo_objeto.png')">
 		<div class="item-glow" v-if="item.glow"></div>
 		<img class="item_image" :src="require('@/assets/' + item.image)" @click="show_drop()" @mouseenter="relay_description">
 	</div>
@@ -63,7 +64,7 @@ export default {
 					this.item = break_rosary(this.item);
 				this.close_drop();
 			} else if (action == "unban") {
-				if (this.item.item_type == "pearl")
+				if (this.item.item_type == "broken_pearl")
 					this.item = repair_pearl(this.item);
 				else
 					this.item = repair_rosary(this.item);
@@ -145,6 +146,7 @@ export default {
 	height: 100px;
 	padding: 3px;
 	margin-top: 3px;
+    margin: 20px;
 }
 
 .item_image:hover {
@@ -155,10 +157,10 @@ export default {
 }
 
 .item-border {
-	border: solid;
+/*	border: solid;
 	border-width: 3px;
 	border-color: #f7e06c;
-}
+*/}
 
 .item-glow {
 	border-radius:50%;
@@ -174,6 +176,13 @@ export default {
 	z-index: -1;
 }
 
+.fondo_objeto {
+	position:absolute;
+	width: 143px;
+	height: 143px;
+	z-index: -1;
+}
+
 @keyframes glow_animation {
 	from {box-shadow: 0 0 40px 40px #497ae5;}
 	to {box-shadow: 0}
@@ -181,16 +190,17 @@ export default {
 
 
 .item_drop_wrapper {
-	width: 120px;
-	height: 120px;
+	width: 143px;
+	height: 143px;
 }
 
 .dropdown_wrapper {
-	background-color: #497ae5;
+	background-color: #392919;
 	text-align:center;
-	border-radius:10px;
+	border-radius:3px;
 	border-style: solid;
-	border-color: #efcd23;
+	border-color: #603f22;
+    border-width: 5px;
 	position:relative;
 	width: 20vw;
 	left: -20%;
@@ -200,16 +210,17 @@ export default {
 .dropdown_option {
 	text-align:center;
 	cursor: pointer;
-	color: #000000;
-	font-family: monospace;
+	color: #ffffff;
+	font-family: joystix;
+    font-size: 70%;
 	padding: 0;
-	margin: 0.1vw 0.8vw;
+	margin: 0.5vw 0.8vw;
 }
 
 .dropdown_option:hover {
 	text-align:center;
 	cursor: pointer;
-	background-color: #1cbeef;
+	background-color: #85d8e5d0;
 	color: #ffffff;
 }
 
