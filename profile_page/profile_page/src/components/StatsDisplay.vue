@@ -1,6 +1,8 @@
 <template>
 
-<OneStat v-for="stat in this.stats" :key="stat" :title="stat.title" :value="stat.value"/>
+<div>
+    <OneStat v-for="stat in this.stats" :key="stat" :title="stat.title" :value="stat.value"/>
+</div>
 
 </template>
 

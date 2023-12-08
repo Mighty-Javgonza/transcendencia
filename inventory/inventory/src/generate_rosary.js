@@ -1,4 +1,4 @@
-export default function generate_rosary(targets, sender, owner, admins) {
+export default function generate_rosary(sender, id) {
 	return (
 	{
 		"item_type": "rosary",
@@ -19,10 +19,8 @@ export default function generate_rosary(targets, sender, owner, admins) {
 			{"text": "Observe members", "action": "display_members"},
 			{"text": "Close", "action": "close_drop"}
 		],
-		"target": targets,
 		"sender": sender,
-		"owner": owner,
-		"admins": admins,
+        "id":id,
 		"glow": false,
 		"description": "Is it better to conect with the indvidual, or with the group? What makes for better phylosophical debate? You seem to have found your own answer..."
 	}

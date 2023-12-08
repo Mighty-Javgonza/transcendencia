@@ -40,7 +40,7 @@ export default {
 			"mjpearl": generate_pearl("mmateo-t", "javgonza"),
 			"pjpearl": generate_pearl("pdiaz-pa", "javgonza"),
 			"gjpearl": generate_pearl("guilmira", "javgonza"),
-			"rosary": generate_rosary(["guilmira", "fgata-va", "npinto-g", "javgonza"], "javgonza", "javgonza", ["fgata-va"]),
+			"rosary": generate_rosary("Javi", 1),
 		});
 	},
 	methods: {

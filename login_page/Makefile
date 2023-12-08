@@ -5,7 +5,7 @@ build:
 	docker run -it --rm -v "$(PWD):/usr/src/app" -w /usr/src/app node:12 npm run build
 
 exec_node:
-	docker run -it --rm -v "$(PWD):/usr/src/app" -w /usr/src/app node:12 node log.js
+	docker run -it --rm -v "$(PWD):/usr/src/app" -w /usr/src/app node:12 node delete.js
 
 exec_server:
 	docker run -it --rm -v "$(PWD):/usr/src/app" -w /usr/src/app node:12 npx tsc --esModuleInterop log.ts

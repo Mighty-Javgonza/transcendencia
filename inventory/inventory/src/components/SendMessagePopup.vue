@@ -1,6 +1,6 @@
 <template>
 	<div class="overlay">
-		<div class="send_popup_background">
+		<div class="send_popup_background bordered_popup">
 			<h3>Sending a  message to <b>{{ this.target }}</b></h3>
 			<div class="text_wrapper">
 				<textarea class="text_input" v-model="message_text_component"></textarea>
@@ -18,8 +18,6 @@ export default {
 	}),
 	methods:{
 		send_message() {
-			console.log("TARGET -> " + this.target);
-			console.log("TEXT -> " + this.message_text_component);
 			try {
 				fetch ("http://localhost:4242/send_message?" + new URLSearchParams({
 					sender: this.sender,
@@ -53,9 +51,6 @@ export default {
 	min-height: 200px;
 	background-color: #497ae5;
 	margin: 25%;
-	border-style: solid;
-	border-color: #efcd23; 
-	border-radius: 10px;
 }
 
 .text_input {

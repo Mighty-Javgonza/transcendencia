@@ -25,8 +25,24 @@ export default {
   text-align: center;
 }
 
+:root {
+  --border_color: #603f22;
+  --pop_background: #392919;
+  --select_light: #85d8e5d0;
+}
+
 @font-face {
 	font-family: 'joystix';
 	src: url('~@/assets/fonts/joystix_monospace.otf') format('opentype');
+}
+
+.bordered_popup {
+  border-style: solid;
+  border-color: var(--border_color);
+  font-family: joystix;
+  border-radius: 3px;
+  border-width: 10px;
+  background-color: var(--pop_background);
+  color: white;
 }
 </style>

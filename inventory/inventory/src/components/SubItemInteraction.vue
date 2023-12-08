@@ -4,7 +4,7 @@
 		<SendMessagePopup @close_interaction="close" v-if="this.interaction == 'sending_message'"/>
 		<SetPasswordPopup @close_interaction="close" @set_password="set_password" v-if="this.interaction == 'setting_password'"/>
 		<InputPasswordPopup @close_interaction="close" @unlock_password="unlock_password" v-if="this.interaction == 'unlocking_password'"/>
-		<ViewMembersPopup @close_interaction="close" @user_interact="user_interact" :members="this.item.target" :admins="this.item.admins" :owner="this.item.owner" v-if="this.interaction == 'displaying_members' || this.interaction == 'making_admin' || this.interaction == 'unmaking_admin' || this.interaction == 'kicking_member'"/>
+		<ViewMembersPopup @close_interaction="close" @user_interact="user_interact" :members="users_in_chat" v-if="this.interaction == 'displaying_members' || this.interaction == 'making_admin' || this.interaction == 'unmaking_admin' || this.interaction == 'kicking_member'"/>
 	</div>
 </template>
 
@@ -14,6 +14,17 @@ import ViewMessagesPopup from './ViewMessagesPopup'
 import SetPasswordPopup from './SetPasswordPopup'
 import InputPasswordPopup from './InputPasswordPopup'
 import ViewMembersPopup from './ViewMembersPopup'
+
+const server_url = "http://localhost:3000"
+const post_request_params = {
+  method: 'POST',
+  mode: 'cors',
+  headers: {
+    "Content-Type": "application/json",
+    'Accept': 'application/json'
+  },
+  body: JSON.stringify({})
+}
 
 export default {
 	name: 'SubItemInteraction',
@@ -45,12 +56,12 @@ export default {
 				if (this.check_is_admin(member))
 					this.$emit('unmake_admin', member)
 			} else if (this.interaction == 'kicking_member') {
-				console.log("HOLAA " + member);
 				if (member != this.item.sender)
 				{
-					if (this.check_is_admin(member))
+                  //TODO change check
+					if (member.isAdmin)
 					{
-						if (this.item.sender == this.item.owner)
+						if (member.isOwner)
 							this.$emit('kick_member', member)
 					}
 					else
@@ -59,14 +70,29 @@ export default {
 			}
 		},
 		check_is_admin(member) {
-			if (member == this.item.owner)
+			if (member.isOwner)
 				return false;
-			for (var a in this.item.admins)
-				if (member == this.item.admins[a])
-					return true;
-			return false;
-		}
-	}
+            return (member.isAdmin)
+		},
+        getUsersInChat(id) {
+          if (this.item.item_type == "rosary")
+          {
+            fetch(server_url + "/chats/"+ id +"/users", post_request_params).then((response) => {
+                response.json().then( (r) => {
+                  this.users_in_chat = r;
+                });
+            });
+          }
+        }
+	},
+    data () {
+      return ({
+        users_in_chat: []
+        })
+    },
+    mounted() {
+      this.getUsersInChat(this.item.id);
+    }
 }
 </script>
 

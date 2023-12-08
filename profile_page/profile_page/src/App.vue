@@ -1,35 +1,52 @@
 <template>
-    <StatsDisplay/>
-    <h3>{{this.username}}</h3>
-    <StatusPearl/>
-    <ProfileImage/>
-
+    <ProfilePage v-if="profile_state != 'no'" :display_status="profile_state" :register_token="register_token"/>
+    <!--AdminPage/-->
+    <CookieChecker @register='start_register'/>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import StatsDisplay from './components/StatsDisplay.vue'
-import StatusPearl from './components/StatusPearl.vue'
-import ProfileImage from './components/ProfileImage.vue'
+import ProfilePage from './components/ProfilePage.vue'
+// import AdminPage from './components/AdminPage.vue'
+import CookieChecker from './components/CookieChecker.vue'
 
 export default defineComponent({
   name: 'App',
   components: {
-    StatsDisplay,
-    StatusPearl,
-    ProfileImage
+    ProfilePage,
+    //  AdminPage
+    CookieChecker
   },
   data () {
     return ({
-      // TODO make username a prop. (And probaby pass it to every other element)
-      username: 'javgonza'
+      profile_state: 'no',
+      register_token: ''
     })
+  },
+  methods: {
+    start_register (token : string) {
+      this.register_token = token
+      this.profile_state = 'registering'
+    }
   }
 })
 </script>
 
 <style>
+
+:root {
+  --border_color: #603f22;
+  --pop_background: #392919;
+  --select_light: #85d8e5d0;
+}
+
 #app {
   text-align: center;
+  font-family: monospace;
+  color: white;
+}
+
+body {
+  background-color: #392919d5
 }
 </style>

@@ -27,6 +27,7 @@ export default defineComponent({
 
 .status_pearl {
   width: 2em;
+  height: 2em;
 }
 
 .online_status {

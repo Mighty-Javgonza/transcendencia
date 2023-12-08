@@ -27,6 +27,27 @@ import SubItemInteraction from './SubItemInteraction.vue'
 import break_rosary from '../break_rosary.js'
 import repair_rosary from '../repair_rosary.js'
 
+const server_url = "http://localhost:3000"
+const post_request_params = {
+  method: 'POST',
+  mode: 'cors',
+  headers: {
+    "Content-Type": "application/json",
+    'Accept': 'application/json'
+  },
+  body: JSON.stringify({})
+}
+
+const delete_request_params = {
+  method: 'DELETE',
+  mode: 'cors',
+  headers: {
+    "Content-Type": "application/json",
+    'Accept': 'application/json'
+  },
+  body: JSON.stringify({})
+}
+
 export default {
 	name: 'InventoryItem',
 	props: ['item_data'],
@@ -34,7 +55,8 @@ export default {
 		return ({
 			item:this.item_data,
 			drop_enabled:false,
-			active_interaction: "none"
+			active_interaction: "none",
+            password: ""
 		});
 	},
 	methods: {
@@ -95,19 +117,42 @@ export default {
 			this.active_interaction = 'none';
 		},
 		set_password(password) {
-			//TODO inform server of change. Specially for chat groups
+            fetch(server_url + "/chats/"+ this.item.id + "/setPassword", {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                  "Content-Type": "application/json",
+                  'Accept': 'application/json'
+                },
+                body: JSON.stringify({password})
+            }).then((r) => {
+              console.log(r);
+             });
 			this.item = generate_padlock(this.item, password);
 		},
 		unlock_password(password) {
-			//TODO better password check
-			if (password == this.item.password) {
-				this.item = this.item.locked_item;
-				this.active_interaction = 'none';
-			}
+            try {
+              fetch(server_url + "/chats/"+ this.item.locked_item.id + "/users", {
+                  method: 'POST',
+                  mode: 'cors',
+                  headers: {
+                    "Content-Type": "application/json",
+                    'Accept': 'application/json'
+                  },
+                  body: JSON.stringify({password})
+                }).then((r) => {
+                    if (r.status == 201)
+                    {
+                        this.item = this.item.locked_item;
+                        this.active_interaction = 'none';
+                    }
+                });
+            } catch (e) {
+              console.log(e);
+            }
 		},
 		make_admin(member) {
-			//TODO inform server of change
-			this.item.admins.push(member);
+            fetch(server_url + "/chats/" + this.item.id + "/admins/" + member, post_request_params); 
 			this.active_interaction = 'none';
 		},
 		unmake_admin(member) {
@@ -120,8 +165,7 @@ export default {
 			this.active_interaction = 'none';
 		},
 		kick_member(member) {
-			console.log('kicking_member ' + member);
-			//TODO inform server of change
+            fetch(server_url + "/chats/" + member + "/" + this.item.id, delete_request_params); 
 			for (var i in this.item.target) {
 				if (this.item.target[i] == member)
 					this.item.target.splice(i, 1);
@@ -131,8 +175,8 @@ export default {
 					this.item.admins.splice(j, 1);
 			}
 			this.active_interaction = 'none';
-		},
-	},
+		}
+     },
 	components: {
 		SubItemInteraction
 	}
