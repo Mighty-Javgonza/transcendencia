@@ -1,7 +1,10 @@
 <template>
-    <ProfilePage v-if="profile_state != 'no'" :display_status="profile_state" :register_token="register_token"/>
+    <button v-if='!in_metaverse && profile_state != "no"' @click="close_profile">Close Profile</button>
+    <ProfilePage v-if="profile_state != 'no'" :display_status="profile_state" :register_token="register_token" @successful_register="go_to_metaverse"/>
     <!--AdminPage/-->
-    <CookieChecker @register='start_register'/>
+    <CookieChecker @register='start_register' @log_success="go_to_metaverse"/>
+    <h1 v-if='in_metaverse && profile_state === "no"'>YOU ARE IN THE METAVERSE</h1>
+    <button v-if='in_metaverse && profile_state === "no"' @click="open_profile">See Profile</button>
 </template>
 
 <script lang="ts">
@@ -20,13 +23,28 @@ export default defineComponent({
   data () {
     return ({
       profile_state: 'no',
-      register_token: ''
+      register_token: '',
+      in_metaverse: false,
+      log_token: ''
     })
   },
   methods: {
     start_register (token : string) {
       this.register_token = token
       this.profile_state = 'registering'
+    },
+    go_to_metaverse (logToken : string) {
+      this.profile_state = 'no'
+      this.in_metaverse = true
+      this.log_token = logToken
+    },
+    open_profile () {
+      this.profile_state = 'my_profile'
+      this.in_metaverse = false
+    },
+    close_profile () {
+      this.profile_state = 'no'
+      this.in_metaverse = true
     }
   }
 })

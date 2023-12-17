@@ -1,33 +1,81 @@
 <template>
     <button class="fa_button" v-if="!enabled && !enabling" @click="enable" >Enable 2FA</button>
-    <div class="qr_cage"  v-if="enabling">
+    <div class="qr_cage"  v-if="enabling && not_enabled">
         <img class="qr_code_image" :src="qr_image">
         <h3 class="fa_confirm_title" >Input Code To Confirm</h3>
-        <textarea class="fa_code_input"></textarea>
-        <button class="fa_button">Send Code</button>
+        <p v-if="wrong_code">Wrong code</p>
+        <textarea class="fa_code_input" v-model="input_code"></textarea>
+        <button class="fa_button" @click="confirm_enable">Send Code</button>
     </div>
-    <button class="fa_button" v-if="enabled">Disable 2FA</button>
+    <h3 v-if="!not_enabled && enabling">2FA ENABLED</h3>
+    <p v-if="wrong_code && enabled">Wrong code</p>
+    <textarea class="fa_code_input" v-if="enabled" v-model="input_code"></textarea>
+    <button class="fa_button" v-if="enabled" @click="disable2fa">Disable 2FA</button>
 </template>
 
 <script>
 
 import { defineComponent } from 'vue'
 import QRNotReceived from '../assets/QR_no_recibido.png'
+import { backend, postRequestParams, getRequestParams } from './connect_params.ts'
 
 export default defineComponent({
   name: 'Enabler2FA',
   data () {
     return ({
       // TODO get from the server
-      enabled: false,
+      enabled: globalThis.has2FA,
       enabling: false,
-      qr_image: QRNotReceived
+      qr_image: QRNotReceived,
+      input_code: '',
+      not_enabled: true,
+      wrong_code: false
     })
   },
   methods: {
     enable () {
       this.enabling = true
-      // TODO request server to enable 2FA and change QR code
+      fetch(backend + '/log/generate2FASecret/' + globalThis.logToken).then((r) => {
+        r.json().then((answer) => {
+          if (answer.qr !== undefined) {
+            this.qr_image = answer.qr
+          }
+        })
+      })
+    },
+    confirm_enable () {
+      const data = postRequestParams
+      data.body = JSON.stringify({
+        token: globalThis.logToken,
+        code: this.input_code
+      })
+      console.log(data)
+      fetch(backend + '/log/confirm2FA', data).then((r) => {
+        r.text().then((answer) => {
+          if (answer === 'ok') {
+            this.not_enabled = false
+          } else if (answer === 'ko') {
+            this.wrong_code = true
+          }
+        })
+      })
+    },
+    disable2fa () {
+      const data = postRequestParams
+      data.body = JSON.stringify({
+        token: globalThis.logToken,
+        code: this.input_code
+      })
+      fetch(backend + '/log/disable2FA', data).then((r) => {
+        r.text().then((answer) => {
+          if (answer === 'ok') {
+            this.not_enabled = true
+            this.enabled = false
+          } else if (answer === 'ko') {
+            this.wrong_code = true
+          }
+        })
+      })
     }
   }
 })

@@ -1,7 +1,7 @@
 <template>
     <p class="edit_error_field" v-if="this.invalid_username">{{this.invalid_user_message}}</p>
     <div class="username_container">
-        <h3 class="username_text" v-if='!this.editing'>{{my_username}}</h3>
+        <h3 class="username_text" v-if='!this.editing'>{{username}}</h3>
         <textarea class="username_input" v-if='this.editing' v-model="new_username"></textarea>
         <EditField v-if="this.editable" @start_edit="start_edit" @cancel_edit="cancel_edit" @accept_edit="accept_edit"/>
     </div>
@@ -21,7 +21,6 @@ export default defineComponent({
   data () {
     return ({
       editing: false,
-      my_username: this.username,
       new_username: '',
       invalid_username: false,
       invalid_user_message: 'Invalid user'
@@ -30,7 +29,7 @@ export default defineComponent({
   methods: {
     start_edit () {
       this.editing = true
-      this.new_username = this.my_username
+      this.new_username = this.username
     },
     accept_edit () {
       this.editing = false
@@ -38,13 +37,11 @@ export default defineComponent({
       if (!this.new_username.match(regExp)) {
         this.invalid_username = true
         this.invalid_user_message = 'Only letters and numbers'
-      } else if (this.my_username === this.new_username) {
+      } else if (this.username === this.new_username) {
         this.invalid_username = true
         this.invalid_user_message = 'Same username'
       } else {
-      // TODO: Request to change username
         this.$emit('change_username', this.new_username)
-        this.my_username = this.new_username
         this.invalid_username = false
       }
     },

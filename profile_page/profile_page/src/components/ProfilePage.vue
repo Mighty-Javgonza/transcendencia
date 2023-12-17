@@ -1,15 +1,15 @@
 <template>
     <div class="profile_container">
-        <StatsDisplay v-if="display_status != 'registering'"/>
-        <MatchHistory v-if="display_status != 'registering'"/>
+        <StatsDisplay v-if="display_status != 'registering' && loaded" :username="username"/>
+        <MatchHistory v-if="display_status != 'registering' && loaded"/>
         <div class="personal_data_wrapper">
             <div :class="{personal_data:true, float_right:display_status != 'registering'}">
                 <div class=status_profile_pair>
                     <StatusPearl v-if="display_status != 'registering'"/>
-                    <ProfileImage editable="display_status =='registering'"/>
+                    <ProfileImage v-if="loaded" editable="display_status =='registering'" :path="player_data.profilePic"/>
                 </div>
                 <Username :username="this.username" editable="display_status == 'registering'" @change_username="changeUsername"/>
-                <Enabler2FA/>
+                <Enabler2FA v-if="display_status != 'registering'"/>
             </div>
         </div>
     </div>
@@ -25,18 +25,7 @@ import ProfileImage from './ProfileImage.vue'
 import Username from './Username.vue'
 import MatchHistory from './MatchHistory.vue'
 import Enabler2FA from './Enabler2FA.vue'
-
-const backend = 'http://localhost:3000'
-
-const postRequestParams = {
-  method: 'POST',
-  mode: 'cors',
-  headers: {
-    'Content-Type': 'application/json',
-    Accept: 'application/json'
-  },
-  body: JSON.stringify({})
-}
+import { backend, postRequestParams, getRequestParams } from './connect_params'
 
 export default defineComponent({
   name: 'ProfilePage',
@@ -51,24 +40,49 @@ export default defineComponent({
   },
   data () {
     return ({
-      // TODO make username a prop. (And probaby pass it to every other element)
-      username: 'javgonza'
+      username: 'Username',
+      loaded: false,
+      player_data: {}
     })
   },
   methods: {
     registerUser () {
-      console.log('REGISTER')
-      console.log(this.register_token)
-      console.log(this.username)
       const myData : any = postRequestParams
       myData.body = JSON.stringify({
         username: this.username,
         register_token: this.register_token
       })
-      fetch(backend + '/log/register', myData)
+      fetch(backend + '/log/register', myData).then((r) => {
+        // TODO try catch, invalid JSON
+        r.json().then((registerAnswer) => {
+          if (registerAnswer.status === 'ok') {
+            this.$emit('successful_register')
+            globalThis.logToken = registerAnswer.meta_token
+          }
+        })
+      })
     },
     changeUsername (newUsername : string) {
+      if (this.display_status != 'registering')
+      {
+        console.log('Changing username')
+        fetch(backend + '/changeUsername/' + this.username + '/' + newUsername, getRequestParams)
+      }
       this.username = newUsername
+    }
+  },
+  created () {
+    if (globalThis.logToken != undefined)
+    {
+      const myData : any = getRequestParams
+      fetch(backend + '/log/me/' + globalThis.logToken, myData).then((a) => {
+        a.json().then((player) => {
+          globalThis.id = player.id
+          this.player_data = player
+          this.username = player.name
+          this.loaded = true
+        })
+      })
     }
   }
 })

@@ -10,17 +10,19 @@
 import { defineComponent } from 'vue'
 import defaultAvatar from '../assets/default_avatar.jpg'
 import EditField from './EditField.vue'
+import { backend, postRequestParams } from './connect_params'
 
 export default defineComponent({
   name: 'ProfileImage',
-  props: ['editable'],
+  props: ['editable', 'path'],
   components: {
     EditField
   },
   data () {
     return ({
       image: defaultAvatar,
-      editing: false
+      editing: false,
+      selected_image: ''
     })
   },
   methods: {
@@ -37,17 +39,31 @@ export default defineComponent({
       this.editing = false
     },
     accept_edit () {
-      // TODO upload image
+      this.uploadImage()
       this.editing = false
     },
     readFile (event) {
       if (event.target.files[0] !== undefined) {
+        this.selected_image = event.target.files[0]
         try {
           const newImage = URL.createObjectURL(event.target.files[0])
           this.image = newImage
         } catch (e) {
         }
       }
+    },
+    uploadImage() {
+      const formData = new FormData()
+      formData.append('image', this.selected_image)
+      fetch(backend + '/users/' + globalThis.id + '/uploadProfilePic', {
+        method: 'POST',
+        body: formData
+      })
+    }
+  },
+  created () {
+    if (this.path !== undefined) {
+      this.image = backend + '/' + this.path
     }
   }
 })
