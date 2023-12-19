@@ -5,6 +5,7 @@
     <CookieChecker @register='start_register' @log_success="go_to_metaverse"/>
     <h1 v-if='in_metaverse && profile_state === "no"'>YOU ARE IN THE METAVERSE</h1>
     <button v-if='in_metaverse && profile_state === "no"' @click="open_profile">See Profile</button>
+    <ButtonedInventory v-if="in_metaverse" @inventory_open="open_inventory" @inventory_close="close_inventory"/>
 </template>
 
 <script lang="ts">
@@ -12,13 +13,15 @@ import { defineComponent } from 'vue'
 import ProfilePage from './components/ProfilePage.vue'
 // import AdminPage from './components/AdminPage.vue'
 import CookieChecker from './components/CookieChecker.vue'
+import ButtonedInventory from './components/ButtonedInventory.vue'
 
 export default defineComponent({
   name: 'App',
   components: {
     ProfilePage,
     //  AdminPage
-    CookieChecker
+    CookieChecker,
+    ButtonedInventory
   },
   data () {
     return ({
@@ -45,6 +48,13 @@ export default defineComponent({
     close_profile () {
       this.profile_state = 'no'
       this.in_metaverse = true
+    },
+    open_inventory () {
+      this.profile_state = 'no'
+    //  this.in_metaverse = false
+    },
+    close_inventory () {
+    //  this.in_metaverse = true
     }
   }
 })
@@ -56,6 +66,11 @@ export default defineComponent({
   --border_color: #603f22;
   --pop_background: #392919;
   --select_light: #85d8e5d0;
+}
+
+@font-face {
+  font-family: 'joystix';
+  src: url('~@/assets/fonts/joystix_monospace.otf') format('opentype');
 }
 
 #app {

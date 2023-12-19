@@ -25,13 +25,20 @@ export default defineComponent({
       selected_image: ''
     })
   },
+  created () {
+    console.log('HHEEEEYY')
+    console.log(this.path)
+    if (this.path !== undefined) {
+      this.image = backend + '/' + this.path
+    }
+  },
   methods: {
     getAvatarImage () {
       // TODO change "this.image" by requesting to server
     },
-    created () {
-      this.getAvatarImage()
-    },
+//    created () {
+//      this.getAvatarImage()
+//    },
     start_edit () {
       this.editing = true
     },
@@ -60,13 +67,8 @@ export default defineComponent({
         body: formData
       })
     }
-  },
-  created () {
-    if (this.path !== undefined) {
-      this.image = backend + '/' + this.path
-    }
   }
-})
+  })
 </script>
 
 <style>
@@ -81,6 +83,7 @@ export default defineComponent({
   border-color: var(--border_color);
   border-radius: 2px;
   margin: 1em;
+  image-rendering:pixelated;
 }
 
 .profile_image_container {

@@ -3,3 +3,7 @@
 */images/*
 opencv
 build_opencv
+*.jpg
+*.js
+*.png
+*.txt

@@ -52,6 +52,7 @@ export default defineComponent({
           } else if (access.status === 'success') {
             this.$emit('log_success', access.log_token)
             globalThis.logToken = access.log_token
+            console.log(logToken)
           } else if (access.status === 'needs_2fa') {
             this.needs2fa = true
             globalThis.has2FA = true

@@ -6,10 +6,10 @@
             <div :class="{personal_data:true, float_right:display_status != 'registering'}">
                 <div class=status_profile_pair>
                     <StatusPearl v-if="display_status != 'registering'"/>
-                    <ProfileImage v-if="loaded" editable="display_status =='registering'" :path="player_data.profilePic"/>
+                    <ProfileImage v-if="loaded" :editable="display_status =='registering' || display_status == 'my_profile'" :path="player_data.profilePic"/>
                 </div>
-                <Username :username="this.username" editable="display_status == 'registering'" @change_username="changeUsername"/>
-                <Enabler2FA v-if="display_status != 'registering'"/>
+                <Username :username="this.username" :editable="display_status == 'registering' || display_status == 'my_profile'" @change_username="changeUsername"/>
+                <Enabler2FA v-if="display_status != 'registering' && display_status != 'profile_display'"/>
             </div>
         </div>
     </div>
@@ -29,7 +29,7 @@ import { backend, postRequestParams, getRequestParams } from './connect_params'
 
 export default defineComponent({
   name: 'ProfilePage',
-  props: ['display_status', 'register_token'],
+  props: ['display_status', 'register_token', 'userId'],
   components: {
     StatsDisplay,
     StatusPearl,
@@ -42,7 +42,7 @@ export default defineComponent({
     return ({
       username: 'Username',
       loaded: false,
-      player_data: {}
+      player_data: {},
     })
   },
   methods: {
@@ -65,24 +65,36 @@ export default defineComponent({
     changeUsername (newUsername : string) {
       if (this.display_status != 'registering')
       {
-        console.log('Changing username')
         fetch(backend + '/changeUsername/' + this.username + '/' + newUsername, getRequestParams)
       }
       this.username = newUsername
     }
   },
   created () {
-    if (globalThis.logToken != undefined)
+    if (globalThis.logToken != undefined && this.userId === undefined)
     {
       const myData : any = getRequestParams
       fetch(backend + '/log/me/' + globalThis.logToken, myData).then((a) => {
         a.json().then((player) => {
           globalThis.id = player.id
+          globalThis.my_data = player
           this.player_data = player
           this.username = player.name
           this.loaded = true
         })
       })
+    } else if (this.userId !== undefined) {
+      const myData : any = getRequestParams
+      fetch (backend + '/players/' + this.userId, myData).then((a) => {
+        a.json().then((player) => {
+          console.log(player)
+          this.player_data = player
+          this.username = player.name
+          this.loaded = true
+        })
+      })
+    } else {
+      this.loaded = true
     }
   }
 })

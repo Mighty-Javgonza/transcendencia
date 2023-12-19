@@ -5,6 +5,7 @@ declare global {
   var logToken: string
   var id: string
   var has2FA : boolean
+  var my_data : any
 }
 
 globalThis.has2FA = false
