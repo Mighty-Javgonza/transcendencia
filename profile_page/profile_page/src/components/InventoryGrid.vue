@@ -1,8 +1,10 @@
 <template>
 
 <div class="ItemDistributor">
-	<!--InventoryItem @change_active_description="relay_description_change" :item_data="fpearl"/-->
 	<InventoryItem v-for="(group,index) in groups" :key="index" @change_active_description="relay_description_change" :item_data="group"/>
+	<InventoryItem v-for="(friendship_request,index) in frienship_requests" :key="index" @change_active_description="relay_description_change" :item_data="friendship_request"/>
+	<InventoryItem v-for="(friend,index) in friends" :key="index" @change_active_description="relay_description_change" :item_data="friend"/>
+	<InventoryItem v-for="(block,index) in blocks" :key="index" @change_active_description="relay_description_change" :item_data="block"/>
 
 </div>
 
@@ -13,6 +15,8 @@
 import InventoryItem from './InventoryItem.vue'
 import generate_pearl from '../generate_pearl.js'
 import generate_rosary from '../generate_rosary.js'
+import generate_rose from '../generate_rose.ts'
+import break_pearl from '../break_pearl.js'
 import { backend, getRequestParams, postRequestParams } from './connect_params'
 
 export default {
@@ -23,18 +27,10 @@ export default {
 	data () {
 		return ({
           groups: [],
-          my_id: globalThis.id
-//			"fpearl": generate_pearl("javgonza", "fata-va"),
-//			"npearl": generate_pearl("javgonza", "npinto-g"),
-//			"mpearl": generate_pearl("javgonza", "mmateo-t"),
-//			"ppearl": generate_pearl("javgonza", "pdiaz-pa"),
-//			"gpearl": generate_pearl("javgonza", "guilmira"),
-//			"fjpearl": generate_pearl("fata-va", "javgonza"),
-//			"njpearl": generate_pearl("npinto-g", "javgonza"),
-//			"mjpearl": generate_pearl("mmateo-t", "javgonza"),
-//			"pjpearl": generate_pearl("pdiaz-pa", "javgonza"),
-//			"gjpearl": generate_pearl("guilmira", "javgonza"),
-//			"rosary": generate_rosary("Javi", 1),
+          my_id: globalThis.id,
+          frienship_requests: [],
+          friends: [],
+          blocks: []
 		});
 	},
 	methods: {
@@ -48,6 +44,33 @@ export default {
           for (const chat in answer) {
             this.groups.push(generate_rosary(globalThis.id, answer[chat].id))
           }
+        })
+      })
+      fetch(backend + '/players/' + globalThis.id + '/getFrienshipRequests').then((r) => {
+        r.json().then((answer) => {
+          for (const friend in answer)
+            this.frienship_requests.push(generate_rose(answer[friend].name, globalThis.id))
+        })
+      })
+      fetch(backend + '/players/' + globalThis.id + '/getFriends').then((r) => {
+        r.json().then((answer) => {
+          for (const friend in answer)
+            this.friends.push(generate_pearl(globalThis.id, answer[friend].name))
+            fetch(backend + '/' + globalThis.id + '/blocks').then((r) => {
+              r.json().then((answer) => {
+                  for (const blocked in answer)
+                      this.blocks.push(break_pearl(generate_pearl(globalThis.id, answer[blocked].name)))
+                  for (const block in this.blocks) {
+                    let blocked_user = this.blocks[block].target
+                    console.log(blocked_user)
+                    for (const friend in this.friends){
+                      console.log(this.friends[friend].target + "   " + blocked_user)
+                      if (this.friends[friend].target == blocked_user)
+                        this.friends.splice(friend, 1)
+                    }
+                  }
+             })
+           })
         })
       })
     }

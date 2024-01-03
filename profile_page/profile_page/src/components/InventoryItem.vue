@@ -12,7 +12,7 @@
 			<li v-for="(option, index) in item.options" :key="index" class="dropdown_option" @click="act(option.action)">{{ option.text }}</li>
 		</ul>
 	</div>
-	<SubItemInteraction @close_interaction="close_sub_item_interaction" @set_password="set_password" @unlock_password="unlock_password" @make_admin="make_admin" @unmake_admin="unmake_admin" @kick_member="kick_member" :interaction="this.active_interaction" :item="this.item" />
+	<SubItemInteraction @close_interaction="close_sub_item_interaction" @set_password="set_password" @unlock_password="unlock_password" @make_admin="make_admin" @unmake_admin="unmake_admin" @kick_member="kick_member" @stop_user_display="stop_displaying_user" :interaction="this.active_interaction" :item="this.item" :userId="userId"/>
 </div>
 
 </template>
@@ -26,27 +26,7 @@ import generate_padlock from '../generate_padlock.js'
 import SubItemInteraction from './SubItemInteraction.vue'
 import break_rosary from '../break_rosary.js'
 import repair_rosary from '../repair_rosary.js'
-
-const server_url = "http://localhost:3000"
-const post_request_params = {
-  method: 'POST',
-  mode: 'cors',
-  headers: {
-    "Content-Type": "application/json",
-    'Accept': 'application/json'
-  },
-  body: JSON.stringify({})
-}
-
-const delete_request_params = {
-  method: 'DELETE',
-  mode: 'cors',
-  headers: {
-    "Content-Type": "application/json",
-    'Accept': 'application/json'
-  },
-  body: JSON.stringify({})
-}
+import {backend, getRequestParams, postRequestParams, deleteRequestParams} from './connect_params'
 
 export default {
 	name: 'InventoryItem',
@@ -56,7 +36,8 @@ export default {
 			item:this.item_data,
 			drop_enabled:false,
 			active_interaction: "none",
-            password: ""
+            password: "",
+            userId: ""
 		});
 	},
 	methods: {
@@ -81,13 +62,19 @@ export default {
 				this.close_drop()
 			} else if (action == "ban") {
 				if (this.item.item_type == "pearl")
+                {
+                    fetch(backend + '/' + globalThis.id + '/blocks/' + this.item.target, postRequestParams);
 					this.item = break_pearl(this.item);
+                }
 				else
 					this.item = break_rosary(this.item);
 				this.close_drop();
 			} else if (action == "unban") {
 				if (this.item.item_type == "broken_pearl")
+                {
+                    fetch(backend + '/' + globalThis.id + '/blocks/' + this.item.target, deleteRequestParams);
 					this.item = repair_pearl(this.item);
+                }
 				else
 					this.item = repair_rosary(this.item);
 				this.close_drop();
@@ -109,6 +96,20 @@ export default {
 			} else if (action == "kick_member") {
 				this.active_interaction = "kicking_member"
 				this.close_drop();
+            } else if (action == "display_sender") {
+              this.userId = this.item.sender;
+              this.active_interaction = "user_display";
+              this.close_drop();
+            } else if (action == "display_target") {
+              this.userId = this.item.target;
+              this.active_interaction = "user_display";
+              this.close_drop();
+            } else if (action == "accept_friendship") {
+              fetch(backend + '/players/' + globalThis.id + '/acceptFrienshipRequest/' + this.item.sender, postRequestParams);
+              this.close_drop();
+            } else if (action == "reject_friendship") {
+              fetch(backend + '/players/' + globalThis.id + '/declineFrienshipRequest/' + this.item.sender, postRequestParams);
+              this.close_drop();
 			} else {
 				console.log("ERROR: Unrecognised option");
 			}
@@ -117,7 +118,7 @@ export default {
 			this.active_interaction = 'none';
 		},
 		set_password(password) {
-            fetch(server_url + "/chats/"+ this.item.id + "/setPassword", {
+            fetch(backend+ "/chats/"+ this.item.id + "/setPassword", {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
@@ -132,7 +133,7 @@ export default {
 		},
 		unlock_password(password) {
             try {
-              fetch(server_url + "/chats/"+ this.item.locked_item.id + "/users", {
+              fetch(backend + "/chats/"+ this.item.locked_item.id + "/users", {
                   method: 'POST',
                   mode: 'cors',
                   headers: {
@@ -152,7 +153,7 @@ export default {
             }
 		},
 		make_admin(member) {
-            fetch(server_url + "/chats/" + this.item.id + "/admins/" + member, post_request_params); 
+            fetch(backend + "/chats/" + this.item.id + "/admins/" + member, postRequestParams); 
 			this.active_interaction = 'none';
 		},
 		unmake_admin(member) {
@@ -165,7 +166,7 @@ export default {
 			this.active_interaction = 'none';
 		},
 		kick_member(member) {
-            fetch(server_url + "/chats/" + member + "/" + this.item.id, delete_request_params); 
+            fetch(backend + "/chats/" + member + "/" + this.item.id, deleteRequestParams); 
 			for (var i in this.item.target) {
 				if (this.item.target[i] == member)
 					this.item.target.splice(i, 1);
@@ -175,7 +176,10 @@ export default {
 					this.item.admins.splice(j, 1);
 			}
 			this.active_interaction = 'none';
-		}
+		},
+        stop_displaying_user() {
+          this.active_interaction = 'none'
+        }
      },
 	components: {
 		SubItemInteraction

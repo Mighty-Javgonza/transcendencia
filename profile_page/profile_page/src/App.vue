@@ -1,10 +1,14 @@
 <template>
-    <button v-if='!in_metaverse && profile_state != "no"' @click="close_profile">Close Profile</button>
+    <link rel="icon" href="<%= BASE_URL %>/../public/favicon.png">
+
+    <!--ProfilePage display_status='profile_display' userId="Curro"/-->
+
+    <button v-if='!in_metaverse && profile_state != "no"' @click="close_profile" class="fa_button">Close Profile</button>
     <ProfilePage v-if="profile_state != 'no'" :display_status="profile_state" :register_token="register_token" @successful_register="go_to_metaverse"/>
     <!--AdminPage/-->
     <CookieChecker @register='start_register' @log_success="go_to_metaverse"/>
     <h1 v-if='in_metaverse && profile_state === "no"'>YOU ARE IN THE METAVERSE</h1>
-    <button v-if='in_metaverse && profile_state === "no"' @click="open_profile">See Profile</button>
+    <button class="fa_button" v-if='in_metaverse && profile_state === "no"' @click="open_profile">See Profile</button>
     <ButtonedInventory v-if="in_metaverse" @inventory_open="open_inventory" @inventory_close="close_inventory"/>
 </template>
 
@@ -37,8 +41,8 @@ export default defineComponent({
       this.profile_state = 'registering'
     },
     go_to_metaverse (logToken : string) {
-      this.profile_state = 'no'
-      this.in_metaverse = true
+      this.profile_state = 'my_profile'
+      this.in_metaverse = false
       this.log_token = logToken
     },
     open_profile () {

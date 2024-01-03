@@ -26,8 +26,6 @@ export default defineComponent({
     })
   },
   created () {
-    console.log('HHEEEEYY')
-    console.log(this.path)
     if (this.path !== undefined) {
       this.image = backend + '/' + this.path
     }
@@ -74,10 +72,12 @@ export default defineComponent({
 <style>
 
 .avatar_image {
-  min-width: 4em;
-  width: 15vw;
-  min-height: 4em;
-  height: 15vw;
+  min-width: 10em;
+  max-width: 24em;
+  width: 20vw;
+  min-height: 10em;
+  max-height: 24em;
+  width: 20vw;
   border:solid;
   border-width: 6px;
   border-color: var(--border_color);

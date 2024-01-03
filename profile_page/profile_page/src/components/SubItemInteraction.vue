@@ -9,6 +9,10 @@
             <button @click="closeProfile">Close Profile</button>
             <ProfilePage display_status="profile_display" :userId="display_userId" />
         </div>
+        <div  v-if="this.interaction == 'user_display'" class="overlay">
+            <button @click="stop_user_display">Close Profile</button>
+            <ProfilePage  display_status="profile_display" :userId="userId"/>
+        </div>
 	</div>
 </template>
 
@@ -33,7 +37,7 @@ const post_request_params = {
 
 export default {
 	name: 'SubItemInteraction',
-	props: ['interaction', 'item'],
+	props: ['interaction', 'item', 'userId'],
 	components: {
 		SendMessagePopup,
 		ViewMessagesPopup,
@@ -95,6 +99,9 @@ export default {
         },
         closeProfile() {
           this.displaying_profile = false
+        },
+        stop_user_display() {
+          this.$emit('stop_user_display')
         }
 	},
     data () {
